@@ -3,6 +3,28 @@ const bonusEl = document.querySelector('#bonusNumber');
 const generateButton = document.querySelector('#generateButton');
 const copyButton = document.querySelector('#copyButton');
 const statusEl = document.querySelector('#status');
+const themeToggle = document.querySelector('#themeToggle');
+
+const THEME_KEY = 'lotto-theme';
+
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
+  document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+  themeToggle.textContent = isDark ? '☀️' : '🌙';
+  themeToggle.setAttribute('aria-pressed', String(isDark));
+}
+
+function initTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved ?? (prefersDark ? 'dark' : 'light'));
+}
+
+function toggleTheme() {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  localStorage.setItem(THEME_KEY, next);
+}
 
 let currentNumbers = [];
 let currentBonus = null;
@@ -62,5 +84,7 @@ async function copyNumbers() {
 
 generateButton.addEventListener('click', generateLotto);
 copyButton.addEventListener('click', copyNumbers);
+themeToggle.addEventListener('click', toggleTheme);
 
+initTheme();
 generateLotto();
