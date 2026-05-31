@@ -1,15 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  
+  <title>로또 번호 생성기</title>
+  <link href="./style.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+  <main class="app-shell" aria-labelledby="page-title">
+    <section class="generator-panel">
+      <div class="intro">
+        <p class="eyebrow">Lotto 6/45</p>
+        <h1 id="page-title">로또 번호 생성기</h1>
+        <p>1부터 45까지 중복 없이 6개 번호를 뽑고, 보너스 번호 1개를 함께 생성합니다.</p>
+      </div>
+
+      <div class="result-card" aria-live="polite">
+        <div class="numbers" id="numbers" aria-label="생성된 로또 번호"></div>
+        <div class="bonus-wrap">
+          <span>보너스</span>
+          <strong class="ball bonus" id="bonusNumber">?</strong>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button type="button" id="generateButton">번호 생성</button>
+        <button type="button" class="secondary" id="copyButton">복사</button>
+      </div>
+
+      <p class="status" id="status" role="status"></p>
+    </section>
+  </main>
+
+  <script defer src="./main.js"></script>
 </body>
 </html>
-independentguides
