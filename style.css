@@ -77,24 +77,30 @@ button {
   box-shadow: var(--panel-shadow);
 }
 
-.theme-toggle {
+.toolbar {
   position: absolute;
   top: 18px;
   right: 18px;
-  width: 44px;
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-btn {
+  min-width: 44px;
   min-height: 44px;
-  padding: 0;
+  padding: 0 12px;
   display: inline-grid;
   place-items: center;
   border: 1px solid var(--secondary-border);
-  border-radius: 50%;
+  border-radius: 22px;
   background: var(--secondary-bg);
   color: var(--text);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
+  font-weight: 800;
   line-height: 1;
 }
 
-.theme-toggle:hover {
+.toggle-btn:hover {
   background: var(--secondary-hover);
   transform: translateY(-1px);
 }

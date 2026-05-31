@@ -10,18 +10,21 @@
 <body>
   <main class="app-shell" aria-labelledby="page-title">
     <section class="generator-panel">
-      <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 전환" aria-pressed="false">🌙</button>
+      <div class="toolbar">
+        <button type="button" id="langToggle" class="toggle-btn" aria-label="Switch to English">EN</button>
+        <button type="button" id="themeToggle" class="toggle-btn" aria-label="테마 전환" aria-pressed="false">🌙</button>
+      </div>
 
       <div class="intro">
         <p class="eyebrow">Lotto 6/45</p>
         <h1 id="page-title">로또 번호 생성기</h1>
-        <p>1부터 45까지 중복 없이 6개 번호를 뽑고, 보너스 번호 1개를 함께 생성합니다.</p>
+        <p id="intro-desc">1부터 45까지 중복 없이 6개 번호를 뽑고, 보너스 번호 1개를 함께 생성합니다.</p>
       </div>
 
       <div class="result-card" aria-live="polite">
         <div class="numbers" id="numbers" aria-label="생성된 로또 번호"></div>
         <div class="bonus-wrap">
-          <span>보너스</span>
+          <span id="bonus-label">보너스</span>
           <strong class="ball bonus" id="bonusNumber">?</strong>
         </div>
       </div>

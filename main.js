@@ -4,8 +4,94 @@ const generateButton = document.querySelector('#generateButton');
 const copyButton = document.querySelector('#copyButton');
 const statusEl = document.querySelector('#status');
 const themeToggle = document.querySelector('#themeToggle');
+const langToggle = document.querySelector('#langToggle');
+const pageTitle = document.querySelector('#page-title');
+const introDesc = document.querySelector('#intro-desc');
+const bonusLabel = document.querySelector('#bonus-label');
 
 const THEME_KEY = 'lotto-theme';
+const LANG_KEY = 'lotto-lang';
+
+const translations = {
+  ko: {
+    title: '로또 번호 생성기',
+    heading: '로또 번호 생성기',
+    description: '1부터 45까지 중복 없이 6개 번호를 뽑고, 보너스 번호 1개를 함께 생성합니다.',
+    numbersAria: '생성된 로또 번호',
+    bonusLabel: '보너스',
+    generate: '번호 생성',
+    copy: '복사',
+    themeAria: '테마 전환',
+    langLabel: 'EN',
+    langAria: 'Switch to English',
+    generated: '새 번호를 생성했습니다.',
+    copied: '번호를 클립보드에 복사했습니다.',
+    copyText: (nums, bonus) => `로또 번호: ${nums} / 보너스: ${bonus}`,
+  },
+  en: {
+    title: 'Lotto Number Generator',
+    heading: 'Lotto Number Generator',
+    description: 'Draws 6 unique numbers from 1 to 45, plus one bonus number.',
+    numbersAria: 'Generated lotto numbers',
+    bonusLabel: 'Bonus',
+    generate: 'Generate',
+    copy: 'Copy',
+    themeAria: 'Toggle theme',
+    langLabel: '한',
+    langAria: '한국어로 전환',
+    generated: 'Generated a new set of numbers.',
+    copied: 'Copied numbers to the clipboard.',
+    copyText: (nums, bonus) => `Lotto numbers: ${nums} / Bonus: ${bonus}`,
+  },
+};
+
+let currentLang = 'ko';
+let statusKey = null;
+
+function t() {
+  return translations[currentLang];
+}
+
+function renderStatus() {
+  if (!statusKey) {
+    statusEl.textContent = '';
+  } else if (statusKey === 'copyFallback') {
+    statusEl.textContent = t().copyText(currentNumbers.join(', '), currentBonus);
+  } else {
+    statusEl.textContent = t()[statusKey];
+  }
+}
+
+function applyLang(lang) {
+  currentLang = translations[lang] ? lang : 'ko';
+  const text = t();
+
+  document.documentElement.lang = currentLang;
+  document.title = text.title;
+  pageTitle.textContent = text.heading;
+  introDesc.textContent = text.description;
+  numbersEl.setAttribute('aria-label', text.numbersAria);
+  bonusLabel.textContent = text.bonusLabel;
+  generateButton.textContent = text.generate;
+  copyButton.textContent = text.copy;
+  themeToggle.setAttribute('aria-label', text.themeAria);
+  langToggle.textContent = text.langLabel;
+  langToggle.setAttribute('aria-label', text.langAria);
+
+  renderStatus();
+}
+
+function initLang() {
+  const saved = localStorage.getItem(LANG_KEY);
+  const prefersEn = (navigator.language || '').toLowerCase().startsWith('en');
+  applyLang(saved ?? (prefersEn ? 'en' : 'ko'));
+}
+
+function toggleLang() {
+  const next = currentLang === 'ko' ? 'en' : 'ko';
+  applyLang(next);
+  localStorage.setItem(LANG_KEY, next);
+}
 
 function applyTheme(theme) {
   const isDark = theme === 'dark';
@@ -68,23 +154,27 @@ function renderNumbers() {
 function generateLotto() {
   drawNumbers();
   renderNumbers();
-  statusEl.textContent = '새 번호를 생성했습니다.';
+  statusKey = 'generated';
+  renderStatus();
 }
 
 async function copyNumbers() {
-  const text = `로또 번호: ${currentNumbers.join(', ')} / 보너스: ${currentBonus}`;
+  const text = t().copyText(currentNumbers.join(', '), currentBonus);
 
   try {
     await navigator.clipboard.writeText(text);
-    statusEl.textContent = '번호를 클립보드에 복사했습니다.';
+    statusKey = 'copied';
   } catch {
-    statusEl.textContent = text;
+    statusKey = 'copyFallback';
   }
+  renderStatus();
 }
 
 generateButton.addEventListener('click', generateLotto);
 copyButton.addEventListener('click', copyNumbers);
 themeToggle.addEventListener('click', toggleTheme);
+langToggle.addEventListener('click', toggleLang);
 
 initTheme();
+initLang();
 generateLotto();
